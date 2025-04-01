@@ -20,23 +20,36 @@ class IncomeExpenseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
+      height: 80,
       padding: const EdgeInsets.all(defaultSpacing),
       decoration: BoxDecoration(
         color: expenseData.label == 'Income' ? primaryDark : accent,
         borderRadius: const BorderRadius.all(Radius.circular(defaultRadius))
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(expenseData.label),
-              Text(expenseData.amount)
+              Text(
+                expenseData.label,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.white),
+              ),
+              Text(
+                expenseData.amount,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
-          Icon(expenseData.icon)
+          Icon(expenseData.icon, color: Colors.white,)
         ],
       ),
     );
