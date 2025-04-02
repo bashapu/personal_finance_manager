@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/screens/main_screen_host.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MainScreenHost(),
+      home: null,
     );
   }
 }
