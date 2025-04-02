@@ -60,7 +60,7 @@ A personal finance tracking mobile app built with Flutter & SQLite. Track income
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/bashapu/personal_finance_tracker.git
-cd personal_finance_tracker
+git clone https://github.com/bashapu/personal_finance_manager.git
+cd personal_finance_manager
 flutter pub get
 flutter run
