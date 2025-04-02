@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'screens/login_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(FinanceApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class FinanceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Finance Tracker',
       debugShowCheckedModeBanner: false,
-      title: 'Personal Finance Tracker',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: null,
+      home: LoginScreen(),
     );
   }
 }
