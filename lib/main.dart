@@ -12,7 +12,7 @@ class FinanceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Finance Tracker',
+      title: 'Personal Finance Tracker',
       debugShowCheckedModeBanner: false,
       home: LoginScreen(),
     );

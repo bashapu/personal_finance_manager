@@ -192,7 +192,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
               ),
       floatingActionButton: ElevatedButton(
         onPressed: _addGoal,
-        child: Text('Add Saving Goal'), // changed from add to pencil/edit style
+        child: Text('Add Saving Goal'),
       ),
     );
   }
