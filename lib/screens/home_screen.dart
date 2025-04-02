@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/database_helper.dart';
+import '../services/session_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> _transactions = [];
   double _income = 0;
   double _expenses = 0;
+  final userId = SessionManager().currentUser?.id;
 
   @override
   void initState() {
@@ -20,7 +22,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void refreshData() async {
-    final data = await DatabaseHelper.instance.fetchTransactions();
+    final data = await DatabaseHelper.instance.fetchTransactions(userId);
     double income = 0;
     double expenses = 0;
     for (var t in data) {
