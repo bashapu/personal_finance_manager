@@ -1,4 +1,4 @@
-# 💰 Personal Finance Tracker - Flutter App
+# Personal Finance Tracker - Flutter App
 
 A personal finance tracking mobile app built with Flutter & SQLite. Track income, expenses, savings goals, and view insightful reports — all offline and user-specific.
 
