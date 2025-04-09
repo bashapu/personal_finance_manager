@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../services/session_manager.dart';
 import '../services/database_helper.dart';
 
@@ -15,6 +16,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   DateTime _startDate = DateTime.now().subtract(Duration(days: 30));
   DateTime _endDate = DateTime.now();
   int flag = 0;
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
@@ -80,49 +82,78 @@ class _ReportsScreenState extends State<ReportsScreen> {
       builder:
           (_) => AlertDialog(
             title: Text('Select Date Range'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextButton(
-                  onPressed: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: tempStart,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime.now(),
-                    );
-                    if (picked != null) tempStart = picked;
-                  },
-                  child: Text(
-                    "Start: ${tempStart.toLocal().toString().split(' ')[0]}",
+            content: FormBuilder(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FormBuilderDateTimePicker(
+                    name: 'tmpStart',
+                    initialValue: tempStart,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime.now(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() => tempStart = val);
+                      }
+                    },
+                    decoration: InputDecoration(labelText: "Start: ${tempStart.toLocal().toString().split(' ')[0]}"),
                   ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: tempEnd,
-                      firstDate: tempStart,
-                      lastDate: DateTime.now(),
-                    );
-                    if (picked != null) tempEnd = picked;
-                  },
-                  child: Text(
-                    "End: ${tempEnd.toLocal().toString().split(' ')[0]}",
+                  // TextButton(
+                  //   onPressed: () async {
+                  //     final picked = await showDatePicker(
+                  //       context: context,
+                  //       initialDate: tempStart,
+                  //       firstDate: DateTime(2000),
+                  //       lastDate: DateTime.now(),
+                  //     );
+                  //     if (picked != null) tempStart = picked;
+                  //   },
+                  //   child: Text(
+                  //     "Start: ${tempStart.toLocal().toString().split(' ')[0]}",
+                  //   ),
+                  // ),
+                  FormBuilderDateTimePicker(
+                    name: 'tmpEnd',
+                    initialValue: tempEnd,
+                    firstDate: tempStart,
+                    lastDate: DateTime.now(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() => tempEnd = val);
+                      }
+                    },
+                    decoration: InputDecoration(labelText: "End: ${tempEnd.toLocal().toString().split(' ')[0]}"),
                   ),
-                ),
-              ],
+                  // TextButton(
+                  //   onPressed: () async {
+                  //     final picked = await showDatePicker(
+                  //       context: context,
+                  //       initialDate: tempEnd,
+                  //       firstDate: tempStart,
+                  //       lastDate: DateTime.now(),
+                  //     );
+                  //     if (picked != null) tempEnd = picked;
+                  //   },
+                  //   child: Text(
+                  //     "End: ${tempEnd.toLocal().toString().split(' ')[0]}",
+                  //   ),
+                  // ),
+                ],
+            )
             ),
             actions: [
               TextButton(
                 onPressed: () {
-                  setState(() {
-                    _startDate = tempStart;
-                    _endDate = tempEnd;
-                    flag = 1;
-                  });
-                  Navigator.pop(context);
-                  _loadReportData(); // Refresh the chart
+                  if (_formKey.currentState?.saveAndValidate() ?? false) {
+                    setState(() {
+                      _startDate = tempStart;
+                      _endDate = tempEnd;
+                      flag = 1;
+                    });
+                    Navigator.pop(context);
+                    _loadReportData();
+                  }
                 },
                 child: Text('Apply'),
               ),
