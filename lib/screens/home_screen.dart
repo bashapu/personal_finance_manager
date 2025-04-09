@@ -164,11 +164,24 @@ class HomeScreenState extends State<HomeScreen> {
             Center(
               child: Column(
                 children: [
-                  Text('Total Balance', style: TextStyle(fontSize: 16)),
                   Text(
                     '\$${balance.toStringAsFixed(2)}',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 28,
+                    ),
                   ),
+                  Text(
+                    'Total Balance',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(fontSize: 16),
+                  ),
+                  // Text('Total Balance', style: TextStyle(fontSize: 16)),
+                  // Text(
+                  //   '\$${balance.toStringAsFixed(2)}',
+                  //   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  // ),
                 ],
               ),
             ),
@@ -177,31 +190,97 @@ class HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  padding: EdgeInsets.all(12),
+                  height: 80,
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.green.shade100,
-                    borderRadius: BorderRadius.circular(12),
+                    color: Color(0xFF40ACA1),
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
                   ),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Income', style: TextStyle(color: Colors.green)),
-                      Text('\$${_income.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Income',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: Colors.white),
+                          ),
+                          Text(
+                            '\$${_income.toStringAsFixed(2)}',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Icon(Icons.arrow_upward_rounded, color: Colors.white),
                     ],
                   ),
                 ),
+                // Container(
+                //   padding: EdgeInsets.all(12),
+                //   decoration: BoxDecoration(
+                //     color: Colors.green.shade100,
+                //     borderRadius: BorderRadius.circular(12),
+                //   ),
+                //   child: Column(
+                //     children: [
+                //       Text('Income', style: TextStyle(color: Colors.green)),
+                //       Text('\$${_income.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.bold)),
+                //     ],
+                //   ),
+                // ),
                 Container(
-                  padding: EdgeInsets.all(12),
+                  height: 80,
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.orange.shade100,
-                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.orange,
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
                   ),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Expenses', style: TextStyle(color: Colors.orange)),
-                      Text('\$${_expenses.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Expense',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: Colors.white),
+                          ),
+                          Text(
+                            '\$${_expenses.toStringAsFixed(2)}',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Icon(Icons.arrow_downward_rounded, color: Colors.white),
                     ],
                   ),
                 ),
+                // Container(
+                //   padding: EdgeInsets.all(12),
+                //   decoration: BoxDecoration(
+                //     color: Colors.orange.shade100,
+                //     borderRadius: BorderRadius.circular(12),
+                //   ),
+                //   child: Column(
+                //     children: [
+                //       Text('Expenses', style: TextStyle(color: Colors.orange)),
+                //       Text('\$${_expenses.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.bold)),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
             SizedBox(height: 20),
