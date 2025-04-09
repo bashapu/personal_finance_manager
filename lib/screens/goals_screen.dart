@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import '../models/goal.dart';
 import '../services/database_helper.dart';
 import '../services/session_manager.dart';
@@ -10,6 +12,7 @@ class GoalsScreen extends StatefulWidget {
 
 class _GoalsScreenState extends State<GoalsScreen> {
   List<Goal> goals = [];
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
@@ -29,32 +32,56 @@ class _GoalsScreenState extends State<GoalsScreen> {
 
     await showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text('New Goal'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: titleController, decoration: InputDecoration(labelText: 'Title')),
-            TextField(controller: targetController, decoration: InputDecoration(labelText: 'Target Amount'), keyboardType: TextInputType.number),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              final goal = Goal(
-                title: titleController.text,
-                targetAmount: double.tryParse(targetController.text) ?? 0.0,
-                savedAmount: 0.0,
-                userId: SessionManager().currentUser!.id,
-              );
-              await DatabaseHelper.instance.insertGoal(goal);
-              Navigator.pop(context);
-              _loadGoals();
-            },
-            child: Text('Add'),
+      builder:
+          (_) => AlertDialog(
+            title: Text('New Goal'),
+            content: FormBuilder(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FormBuilderTextField(
+                    name: 'title',
+                    controller: titleController,
+                    decoration: const InputDecoration(labelText: "Title"),
+                    validator: FormBuilderValidators.required(),
+                  ),
+                  // TextField(controller: titleController, decoration: InputDecoration(labelText: 'Title')),
+                  FormBuilderTextField(
+                    name: 'targetAmount',
+                    controller: targetController,
+                    decoration: const InputDecoration(
+                      labelText: "Target Amount",
+                    ),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.numeric(),
+                    ]),
+                  ),
+                  // TextField(controller: targetController, decoration: InputDecoration(labelText: 'Target Amount'), keyboardType: TextInputType.number),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  if (_formKey.currentState?.saveAndValidate() ?? false) {
+                    final goal = Goal(
+                      title: titleController.text,
+                      targetAmount:
+                          double.tryParse(targetController.text) ?? 0.0,
+                      savedAmount: 0.0,
+                      userId: SessionManager().currentUser!.id,
+                    );
+                    await DatabaseHelper.instance.insertGoal(goal);
+                    Navigator.pop(context);
+                    _loadGoals();
+                  }
+                },
+                child: Text('Add'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -63,26 +90,50 @@ class _GoalsScreenState extends State<GoalsScreen> {
 
     await showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text('Add Saved Amount'),
-        content: TextField(
-          controller: amountController,
-          decoration: InputDecoration(labelText: 'Amount'),
-          keyboardType: TextInputType.number,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              final addAmount = double.tryParse(amountController.text) ?? 0.0;
-              final newAmount = (goal.savedAmount + addAmount).clamp(0.0, goal.targetAmount);
-              await DatabaseHelper.instance.updateGoalSavedAmount(goal.id!, newAmount);
-              Navigator.pop(context);
-              _loadGoals();
-            },
-            child: Text('Save'),
+      builder:
+          (_) => AlertDialog(
+            title: Text('Add Saved Amount'),
+            content: FormBuilder(
+              key: _formKey,
+              child: FormBuilderTextField(
+                name: 'savedAmount',
+                controller: amountController,
+                decoration: const InputDecoration(
+                  labelText: "Amount",
+                ),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.numeric(),
+                ]),
+              ),
+            ),
+            // TextField(
+            //   controller: amountController,
+            //   decoration: InputDecoration(labelText: 'Amount'),
+            //   keyboardType: TextInputType.number,
+            // ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  if (_formKey.currentState?.saveAndValidate() ?? false) {
+                    final addAmount =
+                        double.tryParse(amountController.text) ?? 0.0;
+                    final newAmount = (goal.savedAmount + addAmount).clamp(
+                      0.0,
+                      goal.targetAmount,
+                    );
+                    await DatabaseHelper.instance.updateGoalSavedAmount(
+                      goal.id!,
+                      newAmount,
+                    );
+                    Navigator.pop(context);
+                    _loadGoals();
+                  }
+                },
+                child: Text('Save'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -97,37 +148,59 @@ class _GoalsScreenState extends State<GoalsScreen> {
       builder:
           (_) => AlertDialog(
             title: Text('Edit Goal'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(labelText: 'Title'),
-                ),
-                TextField(
-                  controller: targetController,
-                  decoration: InputDecoration(labelText: 'Target Amount'),
-                  keyboardType: TextInputType.number,
-                ),
-              ],
+            content: FormBuilder(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FormBuilderTextField(
+                    name: 'title',
+                    controller: titleController,
+                    decoration: const InputDecoration(labelText: "Title"),
+                    validator: FormBuilderValidators.required(),
+                  ),
+                  FormBuilderTextField(
+                    name: 'targetAmount',
+                    controller: targetController,
+                    decoration: const InputDecoration(
+                      labelText: "Target Amount",
+                    ),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.numeric(),
+                    ]),
+                  ),
+                  // TextField(
+                  //   controller: titleController,
+                  //   decoration: InputDecoration(labelText: 'Title'),
+                  // ),
+                  // TextField(
+                  //   controller: targetController,
+                  //   decoration: InputDecoration(labelText: 'Target Amount'),
+                  //   keyboardType: TextInputType.number,
+                  // ),
+                ],
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () async {
-                  final db = await DatabaseHelper.instance.database;
-                  await db.update(
-                    'goals',
-                    {
-                      'title': titleController.text,
-                      'targetAmount':
-                          double.tryParse(targetController.text) ??
-                          goal.targetAmount,
-                    },
-                    where: 'id = ?',
-                    whereArgs: [goal.id],
-                  );
-                  Navigator.pop(context);
-                  _loadGoals();
+                  if (_formKey.currentState?.saveAndValidate() ?? false) {
+                    final db = await DatabaseHelper.instance.database;
+                    await db.update(
+                      'goals',
+                      {
+                        'title': titleController.text,
+                        'targetAmount':
+                            double.tryParse(targetController.text) ??
+                            goal.targetAmount,
+                      },
+                      where: 'id = ?',
+                      whereArgs: [goal.id],
+                    );
+                    Navigator.pop(context);
+                    _loadGoals();
+                  }
                 },
                 child: Text('Update'),
               ),
@@ -196,5 +269,4 @@ class _GoalsScreenState extends State<GoalsScreen> {
       ),
     );
   }
-
 }
